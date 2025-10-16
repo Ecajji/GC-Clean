@@ -1,0 +1,16 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-hover tbody tr:hover {
+  background-color: #e9f9e9;
+}
+
+.alert-primary {
+  background-color: #e3f2fd;
+  color: #0d6efd;
+}
