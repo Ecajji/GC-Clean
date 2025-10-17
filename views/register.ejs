@@ -1,32 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Register - Trash Tracker</title>
+  <meta charset="UTF-8">
+  <title>Register - GC Clean</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #2e7d32, #66bb6a);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+    }
+    .card {
+      width: 420px;
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+    }
+    .btn-success {
+      width: 100%;
+      border-radius: 50px;
+    }
+    .form-control, .form-select {
+      border-radius: 10px;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #2e7d32;
+    }
+  </style>
 </head>
-<body class="bg-light d-flex align-items-center" style="height:100vh;">
-  <div class="container text-center" style="max-width:400px;">
-    <h3 class="mb-3">🧾 Register Account</h3>
+<body>
+  <div class="card p-4 bg-white">
+    <h3 class="text-center logo mb-3">GC Clean</h3>
+    <h5 class="text-center text-muted mb-4">Create Your Account</h5>
 
-    <% if (error_msg) { %><div class="alert alert-danger"><%= error_msg %></div><% } %>
-    <% if (success_msg) { %><div class="alert alert-success"><%= success_msg %></div><% } %>
 
-    <form method="POST" action="/register">
-      <input type="text" name="name" class="form-control mb-2" placeholder="Full Name" required>
-      <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
-      <input type="password" name="password" class="form-control mb-2" placeholder="Password" required>
-      <select name="department" class="form-select mb-3" required>
-        <option value="" disabled selected>Select Department</option>
-        <option value="CCS">CCS</option>
-        <option value="CBA">CBA</option>
-        <option value="CHTM">CHTM</option>
-        <option value="CEAS">CEAS</option>
-        <option value="CAHS">CAHS</option>
-      </select>
-      <button class="btn btn-success w-100">Register</button>
+    <form action="/register" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input 
+          type="text" 
+          name="name" 
+          value="<%= values && values.name ? values.name : '' %>" 
+          class="form-control <%= errors && errors.name ? 'is-invalid' : '' %>">
+        <% if (errors && errors.name) { %>
+          <div class="invalid-feedback"><%= errors.name %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">School Email</label>
+        <input 
+          type="email" 
+          name="email" 
+          value="<%= values && values.email ? values.email : '' %>" 
+          class="form-control <%= errors && errors.email ? 'is-invalid' : '' %>">
+        <% if (errors && errors.email) { %>
+          <div class="invalid-feedback"><%= errors.email %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input 
+          type="password" 
+          name="password" 
+          class="form-control <%= errors && errors.password ? 'is-invalid' : '' %>">
+        <% if (errors && errors.password) { %>
+          <div class="invalid-feedback"><%= errors.password %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Department</label>
+        <select 
+          name="department" 
+          class="form-select <%= errors && errors.department ? 'is-invalid' : '' %>">
+          <option value="">-- Select Department --</option>
+          <option value="CCS" <%= values && values.department === 'CCS' ? 'selected' : '' %>>CCS - College of Computer Studies</option>
+          <option value="CBA" <%= values && values.department === 'CBA' ? 'selected' : '' %>>CBA - College of Business and Accountancy</option>
+          <option value="CHTM" <%= values && values.department === 'CHTM' ? 'selected' : '' %>>CHTM - College of Hospitality and Tourism Management</option>
+          <option value="CAHS" <%= values && values.department === 'CAHS' ? 'selected' : '' %>>CAHS - College of Allied Health Studies</option>
+          <option value="CEAS" <%= values && values.department === 'CEAS' ? 'selected' : '' %>>CEAS - College of Education, Arts, and Sciences</option>
+        </select>
+        <% if (errors && errors.department) { %>
+          <div class="invalid-feedback"><%= errors.department %></div>
+        <% } %>
+      </div>
+
+      <button type="submit" class="btn btn-success mt-3">Register</button>
+      <p class="text-center mt-3 mb-0">Already have an account? 
+        <a href="/login" class="text-success fw-semibold">Login</a>
+      </p>
     </form>
-
-    <p class="mt-3">Already have an account? <a href="/login">Login</a></p>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

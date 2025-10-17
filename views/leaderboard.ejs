@@ -22,63 +22,91 @@
   <div class="container mb-5">
 
     <!-- Title & Filter -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h3 class="fw-bold text-success">🏆 Top Trash Collectors</h3>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+      <h3 class="fw-bold text-success mb-3 mb-md-0">🏆 Top Trash Collectors</h3>
 
       <!-- Department Filter -->
-      <form method="GET" action="/leaderboard" class="d-flex">
+      <form method="GET" action="/leaderboard" class="d-flex align-items-center">
         <select name="dept" class="form-select me-2" onchange="this.form.submit()">
           <option value="all" <%= deptFilter==='all'?'selected':'' %>>All Departments</option>
-          <% departments.forEach(d => { %>
-            <option value="<%= d %>" <%= deptFilter===d?'selected':'' %>><%= d %></option>
-          <% }) %>
+          <% if (departments && departments.length > 0) { %>
+            <% departments.forEach(d => { %>
+              <option value="<%= d %>" <%= deptFilter===d?'selected':'' %>><%= d %></option>
+            <% }) %>
+          <% } %>
         </select>
-        <button class="btn btn-success">Filter</button>
+        <button type="submit" class="btn btn-success">Filter</button>
       </form>
     </div>
 
-    <!-- Leaderboard Table -->
+    <!-- Leaderboard Card -->
     <div class="card shadow-sm border-0">
       <div class="card-body p-4">
-        <% if (deptFilter !== 'all') { %>
-          <h5 class="mb-3 text-secondary">🏫 Department: <span class="fw-bold text-success"><%= deptFilter %></span></h5>
+
+        <% if (deptFilter && deptFilter !== 'all') { %>
+          <h5 class="mb-3 text-secondary">
+            🏫 Department:
+            <span class="fw-bold text-success"><%= deptFilter %></span>
+          </h5>
         <% } %>
 
         <table class="table table-hover align-middle mb-0">
           <thead class="table-success">
             <tr>
               <th style="width: 80px;">Rank</th>
-              <th>Collector</th>
+              <th>Collector Name</th>
               <th>Total Collected</th>
             </tr>
           </thead>
           <tbody>
-            <% if (sorted.length === 0) { %>
+            <% if (!sorted || sorted.length === 0) { %>
               <tr>
-                <td colspan="3" class="text-center text-muted py-4">No data yet.</td>
+                <td colspan="3" class="text-center text-muted py-4">
+                  No collector data yet.
+                </td>
               </tr>
             <% } else { %>
               <% sorted.forEach((row, index) => { %>
                 <tr class="<%= index === 0 ? 'table-warning' : index === 1 ? 'table-light' : '' %>">
                   <td class="fw-bold"><%= index + 1 %></td>
-                  <td><%= row.collector %></td>
-                  <td><%= row.total %> items</td>
+                  <td class="text-capitalize">
+                    <%= row.collector %>
+                  </td>
+                  <td class="fw-semibold"><%= row.total %> items</td>
                 </tr>
               <% }) %>
             <% } %>
           </tbody>
         </table>
+
       </div>
     </div>
 
+    <!-- Footer Controls -->
     <div class="text-center mt-4">
+      <a href="/add" class="btn btn-success me-2">➕ Add New Trash Entry</a>
       <a href="/" class="btn btn-outline-success px-4">← Back to Dashboard</a>
     </div>
   </div>
 
   <footer class="text-center mt-5 text-muted">
-    <small>© <%= new Date().getFullYear() %> GC Clean Project</small>
+    <small>© <%= new Date().getFullYear() %> GC Clean Project | Powered by Firebase</small>
   </footer>
+
+  <!-- Optional: Real-time updates (auto-refresh leaderboard every 30s) -->
+  <script>
+    setInterval(() => {
+      fetch(window.location.href)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const newTable = doc.querySelector('tbody');
+          document.querySelector('tbody').innerHTML = newTable.innerHTML;
+        })
+        .catch(console.error);
+    }, 30000);
+  </script>
 
 </body>
 </html>

@@ -2,31 +2,86 @@
 <html>
 <head>
   <title>Edit Trash</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="p-4">
+<body class="p-4 bg-light">
   <div class="container">
-    <h2>Edit Trash Item</h2>
-    <form action="/edit/<%= id %>" method="POST">
+    <h2 class="text-primary mb-3">✏️ Edit Trash Item</h2>
+
+
+
+    <form id="editForm" action="/edit/<%= id %>" method="POST" novalidate>
+      <!-- Type -->
       <div class="mb-3">
         <label>Type</label>
-        <input type="text" name="type" value="<%= data.type %>" class="form-control">
+        <input type="text" name="type"
+          class="form-control <%= errors?.type ? 'is-invalid' : '' %>"
+          value="<%= values?.type || data.type || '' %>">
+        <% if (errors?.type) { %>
+          <div class="invalid-feedback"><%= errors.type %></div>
+        <% } %>
       </div>
+
+      <!-- Quantity -->
       <div class="mb-3">
         <label>Quantity</label>
-        <input type="number" name="quantity" value="<%= data.quantity %>" class="form-control">
+        <input type="number" name="quantity"
+          class="form-control <%= errors?.quantity ? 'is-invalid' : '' %>"
+          value="<%= values?.quantity || data.quantity || '' %>" min="1">
+        <% if (errors?.quantity) { %>
+          <div class="invalid-feedback"><%= errors.quantity %></div>
+        <% } %>
       </div>
+
+      <!-- Location -->
       <div class="mb-3">
         <label>Location</label>
-        <input type="text" name="location" value="<%= data.location %>" class="form-control">
+        <input type="text" name="location"
+          class="form-control <%= errors?.location ? 'is-invalid' : '' %>"
+          value="<%= values?.location || data.location || '' %>">
+        <% if (errors?.location) { %>
+          <div class="invalid-feedback"><%= errors.location %></div>
+        <% } %>
       </div>
+
+      <!-- Date -->
       <div class="mb-3">
         <label>Date</label>
-        <input type="date" name="date" value="<%= data.date %>" class="form-control">
+        <input type="date" id="dateInput" name="date"
+          class="form-control <%= errors?.date ? 'is-invalid' : '' %>"
+          value="<%= values?.date || data.date || '' %>">
+        <% if (errors?.date) { %>
+          <div class="invalid-feedback"><%= errors.date %></div>
+        <% } %>
       </div>
+
       <button class="btn btn-primary">Update</button>
-      <a href="/" class="btn btn-secondary">Cancel</a>
+      <a href="/" class="btn btn-outline-secondary">Cancel</a>
     </form>
   </div>
+
+  <script>
+    // 🟢 Client-side date validation (edit page)
+    document.addEventListener("DOMContentLoaded", () => {
+      const dateInput = document.getElementById("dateInput");
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+
+      dateInput.max = `${yyyy}-${mm}-${dd}`;
+      dateInput.min = "2024-01-01";
+
+      document.getElementById("editForm").addEventListener("submit", (e) => {
+        const dateValue = new Date(dateInput.value);
+        const minDate = new Date("2024-01-01");
+
+        if (isNaN(dateValue) || dateValue > today || dateValue < minDate) {
+          e.preventDefault();
+          alert("Please select a valid date (between Jan 1, 2024 and today).");
+        }
+      });
+    });
+  </script>
 </body>
 </html>

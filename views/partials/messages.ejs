@@ -1,0 +1,28 @@
+<!-- 🟢 Flash Message Partial -->
+<% if (success_msg) { %>
+  <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" id="flash-success">
+    <%= success_msg %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
+<% if (error_msg) { %>
+  <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" id="flash-error">
+    <%= error_msg %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
+<script>
+  // 🕒 Auto-dismiss flash messages after 3 seconds
+  document.addEventListener("DOMContentLoaded", () => {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+      setTimeout(() => {
+        alert.classList.remove('show');
+        alert.classList.add('fade');
+        setTimeout(() => alert.remove(), 500); // remove after fade
+      }, 3000);
+    });
+  });
+</script>
